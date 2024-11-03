@@ -1,4 +1,5 @@
 // Based on routines created by Inigo Quilez
+// https://iquilezles.org/
 
 float sd_circle(vec2 p, float r) {
   return length(p) - r;
