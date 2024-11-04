@@ -14,6 +14,11 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
   return sd_box(p, b) - r;
 }
 
+float sd_rnd_x(vec2 p, float w, float r) {
+  p = abs(p);
+  return length(p - min(p.x + p.y, w) * 0.5) - r;
+}
+
 vec3 inigo_debug(float d) {
   // this is 2.0 / resolution.y in Shader Toy. Impacts line thickness.
   const float px = 2.0 / 600.0;
