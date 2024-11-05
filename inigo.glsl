@@ -10,6 +10,21 @@ float sd_box(vec2 p, vec2 b) {
   return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
 
+float sd_cut_disk(vec2 p, float r, float h) {
+  float w = sqrt(r * r - h * h); // constant for any given shape
+  p.x = abs(p.x);
+
+  float s = max(
+    (h - r) * p.x * p.x + w * w * (h + r - 2.0 * p.y),
+    h * p.x - w * p.y 
+  );
+  return (s < 0.0) 
+    ? length(p) - r
+    : (p.x < w)
+      ? h - p.y
+      : length(p - vec2(w, h));
+}
+
 float sd_rnd_box(vec2 p, vec2 b, float r) {
   return sd_box(p, b) - r;
 }
@@ -17,6 +32,22 @@ float sd_rnd_box(vec2 p, vec2 b, float r) {
 float sd_rnd_x(vec2 p, float w, float r) {
   p = abs(p);
   return length(p - min(p.x + p.y, w) * 0.5) - r;
+}
+
+float sd_tunnel(vec2 p, vec2 wh) {
+  p.x = abs(p.x);
+  p.y = -p.y;
+
+  vec2 q = p - wh;
+
+  vec2 v1 = vec2(max(q.x, 0.0), q.y);
+  float d1 = dot(v1, v1);
+  q.x = (p.y > 0.0) ? q.x : length(p) - wh.x;
+
+  vec2 v2 = vec2(q.x, max(q.y, 0.0));
+  float d2 = dot(v2, v2);
+  float d = sqrt(min(d1, d2));
+  return (max(q.x, q.y) < 0.0) ? -d : d;
 }
 
 vec3 inigo_debug(float d) {
