@@ -25,6 +25,17 @@ float sd_cut_disk(vec2 p, float r, float h) {
       : length(p - vec2(w, h));
 }
 
+float sd_rhombus(vec2 p, vec2 b) {
+  p = abs(p);
+  
+  vec2 a = b - 2.0 * p;
+  float ndot = a.x * b.x - a.y * b.y;
+
+  float h = clamp(ndot / dot(b, b), -1.0, 1.0);
+  float d = length(p - 0.5 * b * vec2(1.0 - h, 1.0 + h));
+  return d * sign(p.x * b.y + p.y * b.x - b.x * b.y);
+}
+
 float sd_rnd_box(vec2 p, vec2 b, float r) {
   return sd_box(p, b) - r;
 }
