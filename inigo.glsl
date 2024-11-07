@@ -45,6 +45,13 @@ float sd_rnd_x(vec2 p, float w, float r) {
   return length(p - min(p.x + p.y, w) * 0.5) - r;
 }
 
+float sd_segment(vec2 p, vec2 a, vec2 b) {
+  vec2 pa = p - a;
+  vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  return length(pa - ba * h);
+}
+
 float sd_tunnel(vec2 p, vec2 wh) {
   p.x = abs(p.x);
   p.y = -p.y;
