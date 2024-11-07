@@ -45,8 +45,11 @@ float sd_rhombus(vec2 p, vec2 b) {
   return d * sign(p.x * b.y + p.y * b.x - b.x * b.y);
 }
 
-float sd_rnd_box(vec2 p, vec2 b, float r) {
-  return sd_box(p, b) - r;
+float sd_rnd_box(vec2 p, vec2 b, vec4 r) {
+  r.xy = (p.x > 0.0) ? r.xy : r.zw;
+  r.x  = (p.y > 0.0) ? r.x  : r.y;
+  vec2 q = abs(p) - b + r.x;
+  return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
 }
 
 float sd_rnd_x(vec2 p, float w, float r) {
