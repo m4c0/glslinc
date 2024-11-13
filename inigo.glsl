@@ -25,6 +25,17 @@ float sd_cut_disk(vec2 p, float r, float h) {
       : length(p - vec2(w, h));
 }
 
+float sd_egg(vec2 p, float ra, float rb) {
+  const float k = sqrt(3.0);
+  p.x = abs(p.x);
+  float r = ra - rb;
+  return -rb + ((p.y < 0.0)
+    ? length(p) - r
+    : (k * (p.x + r) < p.y)
+      ? length(p + vec2(0, -k * r))
+      : length(p + vec2(r, 0)) - 2.0 * r);
+}
+
 float sd_oriented_box(vec2 p, vec2 a, vec2 b, float th) {
   float l = length(b - a);
   vec2 d = (b - a) / l;
