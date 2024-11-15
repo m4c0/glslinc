@@ -36,6 +36,17 @@ float sd_egg(vec2 p, float ra, float rb) {
       : length(p + vec2(r, 0)) - 2.0 * r);
 }
 
+float sd_iso_triangle(vec2 p, vec2 q) {
+  p.x = abs(p.x);
+  vec2 a = p - q * clamp(dot(p, q) / dot(q, q), 0.0, 1.0);
+  vec2 b = p - q * vec2(clamp(p.x / q.x, 0.0, 1.0 ), 1.0);
+  float s = -sign(q.y);
+  vec2 d = min(
+    vec2(dot(a, a), s * (p.x * q.y - p.y * q.x)),
+    vec2(dot(b, b), s * (p.y - q.y)));
+  return -sqrt(d.x) * sign(d.y);
+}
+
 float sd_oriented_box(vec2 p, vec2 a, vec2 b, float th) {
   float l = length(b - a);
   vec2 d = (b - a) / l;
