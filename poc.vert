@@ -2,6 +2,7 @@
 
 layout(push_constant) uniform upc {
   vec2 aspect;
+  float time;
 };
 
 layout(location = 0) in vec2 pos;

@@ -2,6 +2,11 @@
 #extension GL_GOOGLE_include_directive : require
 #include "inigo.glsl"
 
+layout(push_constant) uniform upc {
+  vec2 aspect;
+  float time;
+};
+
 layout(location = 0) in vec2 pos;
 layout(location = 0) out vec4 colour;
 
