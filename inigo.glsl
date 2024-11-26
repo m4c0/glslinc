@@ -61,6 +61,15 @@ float sd_oriented_box(vec2 p, vec2 a, vec2 b, float th) {
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
 }
 
+float sd_pie(vec2 p, float ap, float r) {
+  ap *= 3.1415926535;
+  vec2 c = vec2(sin(ap), cos(ap));
+  p.x = abs(p.x);
+  float l = length(p) - r;
+  float m = length(p - c * clamp(dot(p, c), 0.0, r)); // c=sin/cos of aperture
+  return max(l, m * sign(c.y * p.x - c.x * p.y));
+}
+
 float sd_rhombus(vec2 p, vec2 b) {
   p = abs(p);
   
