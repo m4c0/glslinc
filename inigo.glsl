@@ -1,6 +1,14 @@
 // Based on routines created by Inigo Quilez
 // https://iquilezles.org/
 
+float sd_arc(vec2 p, float ap, float r) {
+  vec2 sc = vec2(sin(ap), cos(ap));
+  p.x = abs(p.x);
+  return (sc.y * p.x > sc.x * p.y)
+    ? length(p - sc * r) 
+    : abs(length(p) - r);
+}
+
 float sd_circle(vec2 p, float r) {
   return length(p) - r;
 }
@@ -98,6 +106,16 @@ float sd_segment(vec2 p, vec2 a, vec2 b) {
   vec2 ba = b - a;
   float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
   return length(pa - ba * h);
+}
+
+float sd_trapezoid(vec2 p, float r1, float r2, float he) {
+  vec2 k1 = vec2(r2, he);
+  vec2 k2 = vec2(r2 -r1, 2.0 * he);
+  p.x = abs(p.x);
+  vec2 ca = vec2(p.x - min(p.x, (p.y<0.0) ? r1 : r2), abs(p.y) - he);
+  vec2 cb = p - k1 + k2 *clamp(dot(k1 - p, k2) / dot(k2, k2), 0.0, 1.0);
+  float s = (cb.x < 0.0 && ca.y < 0.0) ? -1.0 : 1.0;
+  return s * sqrt(min(dot(ca, ca), dot(cb, cb)));
 }
 
 float sd_uneven_capsule(vec2 p, float r1, float r2, float h) {
