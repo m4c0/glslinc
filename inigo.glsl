@@ -49,6 +49,44 @@ float sd_egg(vec2 p, float ra, float rb) {
       : length(p + vec2(r, 0)) - 2.0 * r);
 }
 
+float sd_ellipse(vec2 p, vec2 ab) {
+  p = abs(p);
+  if (p.x > p.y) { p = p.yx; ab = ab.yx; }
+
+  float l = ab.y * ab.y - ab.x * ab.x;
+
+  vec2 mn = ab * p / l;
+  vec2 mn2 = mn * mn;
+
+  float c = (mn2.x + mn2.y - 1.0) / 3.0;
+  float c3 = c * c * c;
+
+  float q = c3 + mn2.x * mn2.y * 2.0;
+  float d = c3 + mn2.x * mn2.y;
+
+  float g = mn.x + mn.x * mn2.y;
+
+  float co;
+  if (d < 0.0) {
+    float h = acos(q / c3) / 3.0;
+    float s = cos(h);
+    float t = sin(h) * sqrt(3.0);
+    float rx = sqrt(-c * (s + t + 2.0) + mn2.x);
+    float ry = sqrt(-c * (s - t + 2.0) + mn2.x);
+    co = (ry + sign(l) * rx + abs(g) / (rx * ry) - mn.x) / 2.0;
+  } else {
+    float h = 2.0 * mn.x * mn.y * sqrt(d);
+    float s = sign(q + h) * pow(abs(q + h), 1.0 / 3.0);
+    float u = sign(q - h) * pow(abs(q - h), 1.0 / 3.0);
+    float rx = -s - u - c * 4.0 + 2.0 * mn2.x;
+    float ry = (s - u) * sqrt(3.0);
+    float rm = sqrt(rx * rx + ry * ry);
+    co = (ry / sqrt(rm - rx) + 2.0 * g / rm - mn.x) / 2.0;
+  }
+  vec2 r = ab * vec2(co, sqrt(1.0 - co * co));
+  return length(r - p) * sign(p.y - r.y);
+}
+
 float sd_iso_triangle(vec2 p, vec2 q) {
   p.x = abs(p.x);
   vec2 a = p - q * clamp(dot(p, q) / dot(q, q), 0.0, 1.0);
