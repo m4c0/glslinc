@@ -107,6 +107,23 @@ float sd_oriented_box(vec2 p, vec2 a, vec2 b, float th) {
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
 }
 
+float sd_parabola(vec2 p, float wi, float he) {
+  p.x = abs(p.x);
+
+  float ik = wi * wi / he;
+  float pp = ik * (he - p.y - 0.5 * ik) / 3.0;
+  float q = p.x * ik * ik * 0.25;
+  float h = q * q - pp * pp * pp;
+  float r = sqrt(abs(h));
+  float x = (h > 0.0)
+    ? pow(q + r, 1.0 / 3.0) - pow(abs(q - r), 1.0 / 3.0) * sign(r - q)
+    : 2.0 * cos(atan(r / q) / 3.0) * sqrt(pp);
+
+  x = min(x,wi);
+  return length(p - vec2(x, he - x * x / ik))
+       * sign(ik * (p.y - he) + p.x * p.x);
+}
+
 float sd_pie(vec2 p, float ap, float r) {
   ap *= 3.1415926535;
   vec2 c = vec2(sin(ap), cos(ap));
