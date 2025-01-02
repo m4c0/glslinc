@@ -1,6 +1,12 @@
 // Based on routines created by Inigo Quilez
 // https://iquilezles.org/
 
+float op_extrusion_3d(vec3 p, float d, float h) {
+  // float d = primitive(p.xy)
+  vec2 w = vec2(d, abs(p.z) - h);
+  return min(max(w.x, w.y), 0.0) + length(max(w, 0.0));
+}
+
 float sd_arc(vec2 p, float ap, float r) {
   vec2 sc = vec2(sin(ap), cos(ap));
   p.x = abs(p.x);
