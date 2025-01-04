@@ -169,6 +169,10 @@ float sd_segment(vec2 p, vec2 a, vec2 b) {
   return length(pa - ba * h);
 }
 
+float sd_sphere_3d(vec3 p, float r) {
+  return length(p) - r;
+}
+
 float sd_trapezoid(vec2 p, float r1, float r2, float he) {
   vec2 k1 = vec2(r2, he);
   vec2 k2 = vec2(r2 -r1, 2.0 * he);
